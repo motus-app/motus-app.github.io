@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motus User Manual</title>
+<meta name="description" content="User manual for Motus, the free one-dimensional seismic site response program: soil column, curves, input motions, linear, equivalent-linear and nonlinear analyses, results, suites, the agent and the command line.">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+
+<header class="nav" id="top">
+  <a class="brand" href="index.html"><img src="img/icon.png" alt="" width="30" height="30"><span>Motus</span></a>
+  <nav>
+    <a href="index.html#features">Features</a>
+    <a href="index.html#validation">Validation</a>
+    <a href="index.html#agents">Agents</a>
+    <a class="here keep" href="manual.html">Manual</a>
+    <a href="index.html#paper">Paper</a>
+    <a class="btn btn-small" href="index.html#download">Download</a>
+  </nav>
+</header>
+
+<div class="man">
+
+<aside class="toc" aria-label="Contents">
+  <button class="toc-toggle" aria-expanded="false">Contents <span aria-hidden="true">▾</span></button>
+  <p>Contents</p>
+  <ol>
+    <li><a href="#install">Install and first launch</a></li>
+    <li><a href="#window">The window</a></li>
+    <li><a href="#quick">Your first analysis</a></li>
+    <li><a href="#column">Building the soil column</a></li>
+    <li><a href="#curves">Modulus and damping curves</a></li>
+    <li><a href="#motion">Input motion</a></li>
+    <li><a href="#analysis">Analysis settings</a></li>
+    <li><a href="#results">Reading the results</a></li>
+    <li><a href="#suite">Suites and uncertainty</a></li>
+    <li><a href="#files">Files and export</a></li>
+    <li><a href="#agent">The agent and MCP</a></li>
+    <li><a href="#cli">Command line</a></li>
+    <li><a href="#keys">Keyboard shortcuts</a></li>
+    <li><a href="#practice">Good practice and limits</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+  </ol>
+</aside>
+
+<article class="doc">
+
+<header class="dh">
+  <p class="eyebrow">User manual · v<span class="ver">0.1.0</span></p>
+  <h1>Motus user manual</h1>
+  <p class="lead">This manual walks through Motus from installation to a finished set of results. It describes every page and panel of the window in the order an engineer uses them, explains what each setting does to the analysis, and ends with the agent, the command line and the checks to make before the numbers are used for design.</p>
+</header>
+
+<!-- 1 -->
+<section id="install">
+  <h2><span class="n">1</span>Install and first launch</h2>
+  <p>Motus is a single program with no installer, licence key or account, so you download the zip for your system from the <a href="index.html#download">download section</a>, unpack it and start the program. The macOS build is universal (Apple silicon and Intel, macOS 11 or later) and the Windows build runs on 64-bit Windows 10 or later, whereas Linux users currently build from source with Rust 1.80 or newer.</p>
+  <div class="cards2">
+    <div><h4>macOS</h4><p>Unzip and move <code>Motus.app</code> to Applications. The app is signed ad hoc but not notarised, so on first launch right-click it and choose <span class="ui">Open</span>, then confirm. Later launches open normally.</p></div>
+    <div><h4>Windows</h4><p>Unzip the folder anywhere and run <code>motus.exe</code>. The executable is not code-signed, so SmartScreen may warn on first launch: choose <span class="ui">More info</span>, then <span class="ui">Run anyway</span>.</p></div>
+  </div>
+  <p>Each package also contains <code>motus-cli</code>, a version without the window for batch work (Section 12), which on macOS sits inside the bundle at <code>Motus.app/Contents/MacOS/motus-cli</code>, and two example projects, <code>example.motus</code> and <code>bangkok_2pct50yr.motus</code>. When Motus starts without a file it opens the built-in example site, which follows the layer sequence of the D-MOD2000 tutorial column (sand fill, gravel with sand, a PI 35 silty clay and two silty fine sands over rock) with assumed shear-wave velocities and a synthetic M 6.5 record at 20 km. The example is the quickest way to learn the program, because every page already has data on it.</p>
+  <div class="snip">
+    <div class="snip-head"><span>Build from source (any platform)</span><button class="copy">Copy</button></div>
+    <pre><code>cargo build --release
+./target/release/motus                          # the window, with the example site
+./target/release/motus site.motus               # open a project</code></pre>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="window">
+  <h2><span class="n">2</span>The window</h2>
+  <p>The window follows a Photoshop-style layout, so the work area sits in the middle while the controls that edit the project live in a dock on the right. Four pages share the work area, namely <b>Profile</b>, <b>Curves</b>, <b>Motion</b> and <b>Results</b>, and you move between them with the tool strip on the left or the <span class="ui">View</span> menu. The dock stays the same on every page, so you can change a layer while looking at its curves or at the results it produced.</p>
+  <figure class="fig">
+    <div class="frame">
+      <img src="img/manual/profile.jpg" alt="The Motus window on the Profile page, with numbered call-outs on its parts" width="1600" height="1000" loading="lazy">
+      <span class="pin" style="left:21%;top:1.8%">1</span>
+      <span class="pin" style="left:31%;top:5.6%">2</span>
+      <span class="pin" style="left:1.4%;top:24%">3</span>
+      <span class="pin" style="left:11%;top:40%">4</span>
+      <span class="pin" style="left:93%;top:9.5%">5</span>
+      <span class="pin" style="left:93%;top:34%">6</span>
+      <span class="pin" style="left:93%;top:71.2%">7</span>
+      <span class="pin" style="left:6%;top:98.4%">8</span>
+    </div>
+    <figcaption><b>Figure 1.</b> The Profile page of the example site with the silty clay layer selected. Click any screenshot in this manual to see it full size.</figcaption>
+  </figure>
+  <ul class="legend">
+    <li><i>1</i><span><b>Menu bar</b>: File, Edit, Analysis, View and Help.</span></li>
+    <li><i>2</i><span><b>Options bar</b>: controls for the current page (column summary, motion tools, result views).</span></li>
+    <li><i>3</i><span><b>Tool strip</b>: Profile, Curves, Motion and Results pages, the agent, and Run.</span></li>
+    <li><i>4</i><span><b>Work area</b>: the plots of the current page. Click a layer in the column to select it.</span></li>
+    <li><i>5</i><span><b>Layers / Site / Suite</b> card: the layer list, the water table and bedrock, the suite of motions.</span></li>
+    <li><i>6</i><span><b>Properties</b> card: every property of the selected layer.</span></li>
+    <li><i>7</i><span><b>Analysis / Log</b> card: method and solver settings, the Run analysis button, and the solver log.</span></li>
+    <li><i>8</i><span><b>Status bar</b>: progress, the last message, and the file name (a dot marks unsaved changes).</span></li>
+  </ul>
+  <p>On the Profile and Curves pages the options bar summarises the column with its total depth <i>H</i>, the fundamental frequency estimate <i>f</i><sub>0</sub>, Vs30 and the number of sublayers the solvers will use, so you see at once how an edit changes the site. The <span class="ui">View</span> menu also switches between the <span class="ui">Pro Dark</span> and <span class="ui">Pro Medium</span> themes and opens the agent panel.</p>
+</section>
+
+<!-- 3 -->
+<section id="quick">
+  <h2><span class="n">3</span>Your first analysis</h2>
+  <p>The following steps take the example site through an equivalent-linear and a nonlinear run and compare them, which shows the whole workflow in about two minutes. Each step points to the section that explains it in detail.</p>
+  <ol class="steps">
+    <li>Start Motus, or choose <span class="ui">File ▸ New (example site)</span>. The Profile page shows five layers over bedrock with Vs 760 m/s and a water table near 4 m.</li>
+    <li>Click the <span class="ui">Silty fine sand</span> layer and look at the Properties card, where its Vs, curve model and sand pore-pressure parameters are set (Section 4).</li>
+    <li>Open the Motion page and type <code>0.3</code> into <span class="ui">Scale to PGA</span>, then press <span class="ui">Apply</span> to scale the synthetic record to 0.3 g (Section 6).</li>
+    <li>In the Analysis card choose <span class="ui">Method ▸ Equivalent linear</span> and press <span class="ui">Run analysis</span> (or <kbd>⌘R</kbd> / <kbd>Ctrl+R</kbd>). Motus switches to the Results page when the run ends.</li>
+    <li>Change the method to <span class="ui">Nonlinear</span> and run again. Both results are kept, so the options bar now offers <span class="ui">Show: EQL | Nonlinear</span> and a <span class="ui">Compare methods</span> check box (Section 8).</li>
+    <li>Open the <span class="ui">Spectra</span> view to compare the surface spectra, then <span class="ui">Profiles</span> for peak acceleration, strain and the excess pore pressure ratio with depth. Save the project with <kbd>⌘S</kbd> / <kbd>Ctrl+S</kbd>.</li>
+  </ol>
+  <div class="note"><span class="t">Stale results</span><p>Results always belong to the project as it was when they were computed. If you change a layer, the motion or a setting afterwards, the Results page shows a red banner, "The project changed after this run", until you run again.</p></div>
+</section>
+
+<!-- 4 -->
+<section id="column">
+  <h2><span class="n">4</span>Building the soil column</h2>
+  <p>A Motus site is a stack of horizontal layers over an elastic half-space, with one water table. Layers are numbered from the surface down, and the Profile page draws the column to scale next to the shear-wave velocity profile and the initial vertical stresses σ<sub>v</sub>, σ′<sub>v</sub> and the hydrostatic pore pressure <i>u</i><sub>0</sub>, so mistakes in thickness, unit weight or water table show up immediately.</p>
+
+  <h3>Layers tab</h3>
+  <p>The Layers tab lists each layer with its depth range, Vs and a tag for any pore-pressure model. Click a row, or the layer in the drawn column, to select it. The buttons under the list add a layer below the selection (a copy of it, which you then edit), move the selection up or down, and delete it, and the <span class="ui">+</span> button in the options bar also adds a layer. Every change can be undone with <kbd>⌘Z</kbd> / <kbd>Ctrl+Z</kbd>, up to 60 steps back.</p>
+
+  <h3>Site tab</h3>
+  <p>The Site tab holds the <b>water table</b> depth (m) and the <b>bedrock</b> half-space below the column, described by its unit weight (kN/m³), shear-wave velocity Vs (m/s) and damping (%). The bedrock properties matter when the input is an outcrop motion, because the half-space then radiates energy back down out of the column (Section 7).</p>
+
+  <h3>Properties card</h3>
+  <p>The Properties card edits the selected layer. Drag a number field sideways to change it, or double-click to type a value. The basic properties are the layer name, the thickness (m), the total unit weight (kN/m³), the shear-wave velocity Vs (m/s), and the curve model, which Section 5 explains. Below these come four optional groups.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Group</th><th>What it does</th><th>When to use it</th></tr></thead>
+    <tbody>
+      <tr><td>Shear strength cap</td><td>Sets τ<sub>max</sub> (kPa, the undrained strength S<sub>u</sub> for clay) and corrects the modulus-reduction curve at large strain after Yee et al. (2013). The nonlinear solver then uses a GQ/H backbone that never exceeds the strength.</td><td>Soft clays and any layer expected to strain beyond about 0.1 %, where laboratory curves alone imply unrealistic strength.</td></tr>
+      <tr><td>SPT (N<sub>1</sub>)<sub>60cs</sub></td><td>Stores the clean-sand corrected blow count used by the liquefaction check.</td><td>Sands below the water table that you want in the Liquefaction view (Section 8).</td></tr>
+      <tr><td>Effective stress</td><td><span class="ui">None</span>, <span class="ui">Sand</span> (Dobry et al. 1985 / Matasović 1993 pore-pressure generation, parameters F, s, p, f, γ<sub>tvp</sub>) or <span class="ui">Clay</span> (Matasović &amp; Vucetic 1995 degradation δ = N<sup>−t</sup>, t = s(γ<sub>c</sub> − γ<sub>tv</sub>)<sup>r</sup>, and u<sub>r</sub> = Aδ³ + Bδ² + Cδ + D).</td><td>Nonlinear effective-stress analyses only. Layers above the water table generate no pore pressure, and the card warns you if you set a model there.</td></tr>
+      <tr><td>Drainage</td><td>Hydraulic conductivity <i>k</i> (m/s) and the rebound modulus parameters K<sub>r</sub>, m and n of Martin et al. (1975). The card prints the resulting E<sub>r</sub> at σ′<sub>v0</sub> = 100 kPa as a check.</td><td>When pore-pressure dissipation is switched on in the Analysis card.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><span class="t">Placeholders</span><p>The default sand and clay pore-pressure parameters are placeholders that make the model run. They are not properties of any real soil, so calibrate them against cyclic laboratory tests on the soil in question before you trust an effective-stress result.</p></div>
+</section>
+
+<!-- 5 -->
+<section id="curves">
+  <h2><span class="n">5</span>Modulus and damping curves</h2>
+  <p>Each layer needs a modulus-reduction curve G/G<sub>max</sub>(γ) and a damping curve D(γ), which the equivalent-linear solver reads directly and the nonlinear solver turns into a backbone with unload–reload rules. You choose the model in the <span class="ui">Curves</span> list of the Properties card, and the fields below it change with the model.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Model</th><th>Inputs</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Darendeli (2001)</td><td>PI (%), OCR, K<sub>0</sub>, number of cycles N, frequency (Hz)</td><td>Evaluated at the mean effective stress of each sublayer, so one layer gives stiffer curves at depth. A good default for most soils.</td></tr>
+      <tr><td>Menq (2003)</td><td>C<sub>u</sub>, D<sub>50</sub> (mm), K<sub>0</sub>, N</td><td>For gravels and coarse granular soils, also stress dependent.</td></tr>
+      <tr><td>MKZ</td><td>γ<sub>r</sub> (%), β, s, D<sub>min</sub> (%)</td><td>A user-defined backbone with Masing damping.</td></tr>
+      <tr><td>User table</td><td>G/G<sub>max</sub> and D (%) at eight strains</td><td>Type your laboratory points; an MKZ backbone is fitted for the nonlinear solver. Tables with their own damping strain grid are edited through the project file or MCP.</td></tr>
+      <tr><td>Linear elastic</td><td>Damping (%)</td><td>Constant stiffness and damping, useful for rock-like layers and for checks.</td></tr>
+      <tr><td>Published</td><td>A curve from the library</td><td>30 published curves: Vucetic &amp; Dobry (1991), EPRI (1993), Seed &amp; Idriss, Idriss (1990), GEI (1983), GeoMatrix (1990) and others.</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/curves.jpg" alt="The Curves page: modulus reduction and damping of all layers, and the nonlinear backbone and damping fit of the selected layer" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 2.</b> The Curves page. The top row shows every layer at its mid-depth stress, and the bottom row shows how the nonlinear solver represents the selected layer.</figcaption>
+  </figure>
+  <p>The Curves page is where you check that the nonlinear solver honours your curves. The lower-left plot compares the target G/G<sub>max</sub> with the fitted MKZ backbone, or with the GQ/H backbone when a strength cap is set, and the lower-right plot compares the target damping with the plain Masing damping and with the damping of the corrected loops. A large gap between the target and the corrected loops at the strains your site reaches means the nonlinear result will not reproduce the damping you specified, and in that case you should revise the curve or keep the Phillips &amp; Hashash correction switched on (Section 7).</p>
+</section>
+
+<!-- 6 -->
+<section id="motion">
+  <h2><span class="n">6</span>Input motion</h2>
+  <p>The Motion page shows the input record as acceleration, velocity and displacement histories, its 5 %-damped response spectrum (or the spectral damping you set) and its Fourier amplitude spectrum smoothed with the Konno–Ohmachi window. The header line gives the number of points, Δt, duration, PGA, PGV, PGD, Arias intensity and the 5–95 % significant duration D5-95, so you can check a record before using it.</p>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/motion.jpg" alt="The Motion page with acceleration, velocity and displacement histories, the response spectrum and the Fourier amplitude spectrum" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 3.</b> The Motion page with the synthetic M 6.5, 20 km record of the example site. The options bar above the plots holds the import, generation, scaling and target tools.</figcaption>
+  </figure>
+
+  <h3>Importing a record</h3>
+  <p>Press the folder button in the options bar or use <span class="ui">File ▸ Import Motion…</span> (<kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd>). Motus recognises PEER NGA <code>.AT2</code> files and two-column time–acceleration files without help. If it cannot recognise the layout, an <span class="ui">Import record</span> dialog shows the first lines of the file and asks for the columns (<span class="ui">Time, acceleration</span> or <span class="ui">Values only</span>), the number of header lines, the time step for single-column files, and the units (g, cm/s² or m/s²).</p>
+
+  <h3>Generating a stochastic record</h3>
+  <p>When no recorded motion is at hand, Motus generates an outcropping-rock record with Boore's (2003) stochastic point-source method. Set the magnitude <span class="ui">M</span>, the distance <span class="ui">R</span> (km), the high-frequency decay κ<sub>0</sub> and a random <span class="ui">Seed</span>, then press <span class="ui">Generate</span>. A different seed gives a different record with the same expected spectrum, which is how you build a suite of synthetic motions. Generated records are high-pass filtered at 0.1 Hz and baseline corrected, so they end with no residual velocity.</p>
+
+  <h3>Scaling and baseline correction</h3>
+  <p><span class="ui">Scale to PGA</span> with <span class="ui">Apply</span> multiplies the record so its peak equals the value you type. <span class="ui">Baseline</span> applies a zero-phase Butterworth high-pass filter at 0.1 Hz and then removes a polynomial fitted to the displacement, which is worth doing on any imported record whose displacement drifts.</p>
+
+  <h3>Target spectra, scaling and matching</h3>
+  <p>The <span class="ui">Target</span> list adds a design spectrum, which Motus draws as a dashed line on the motion spectrum, on the surface spectrum and on the suite statistics. Two forms are available.</p>
+  <ul>
+    <li><b>ASCE 7 / DPT</b>, defined by S<sub>DS</sub>, S<sub>D1</sub> (g) and T<sub>L</sub> (s). The Thai DPT 1301/1302 spectrum outside the Bangkok basin has the same two-parameter form.</li>
+    <li><b>Eurocode 8</b>, defined by a<sub>g</sub> (g), ground type A–E and spectrum type 1 or 2.</li>
+  </ul>
+  <p>With a target set, enter a period range <span class="ui">T</span> (for example 0.1–2 s) and press <span class="ui">Scale</span> or <span class="ui">Match</span>. Scale multiplies the record by one factor chosen from the mean log ratio of target to record over that range, so the record keeps its shape. Match adjusts the Fourier amplitudes in the frequency domain until the spectrum follows the target, and the status bar reports the mean |ln(SA/target)| before and after. Matching changes the character of a recorded motion, so compare the matched history with the original before you use it.</p>
+  <p><span class="ui">File ▸ Export Motion…</span> writes the current record as a text file.</p>
+</section>
+
+<!-- 7 -->
+<section id="analysis">
+  <h2><span class="n">7</span>Analysis settings</h2>
+  <p>The Analysis card sets the method and the solver controls, and its <span class="ui">Run analysis</span> button starts the run in the background while the status bar shows its progress and a <span class="ui">Cancel</span> button. The three methods differ in how they treat soil nonlinearity, so the choice is the most important setting in the card.</p>
+  <div class="cards2">
+    <div><h4>Linear</h4><p>Frequency-domain solution with constant small-strain stiffness and damping. Use it for weak motions and as a reference.</p></div>
+    <div><h4>Equivalent linear (EQL)</h4><p>SHAKE-type iteration: each layer gets the G and D that match an effective strain, 0.65 γ<sub>max</sub> by default, until both change by less than the tolerance.</p></div>
+    <div><h4>Nonlinear</h4><p>D-MOD-type time-domain solution: each sublayer follows its backbone cycle by cycle, with optional pore pressure, clay degradation and dissipation.</p></div>
+    <div><h4>Which to choose</h4><p>EQL is reliable up to peak strains of roughly 0.1–0.3 %. Beyond that, or when pore pressure matters, run the nonlinear solver and compare it with EQL.</p></div>
+  </div>
+  <h3>Settings for every method</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Input motion</td><td>Outcrop</td><td><b>Outcrop (elastic base)</b> for a record from rock outcrop, which is the usual case, or <b>Within (rigid base)</b> for a record measured in a borehole at the base of the column.</td></tr>
+      <tr><td>Scale factor</td><td>1.00</td><td>Multiplies the input record for this analysis without changing the stored motion.</td></tr>
+      <tr><td>fmax</td><td>25 Hz</td><td>Highest frequency the sublayers must carry.</td></tr>
+      <tr><td>Points / λ</td><td>4</td><td>Sublayers per wavelength at fmax; sublayers are no thicker than Vs/(points·fmax).</td></tr>
+      <tr><td>Max sublayer</td><td>2.0 m</td><td>Upper limit on sublayer thickness whatever the velocity.</td></tr>
+      <tr><td>Output depths</td><td>none</td><td>Extra depths (m, separated by commas) at which histories and spectra are recorded, beside the surface, layer tops and base.</td></tr>
+      <tr><td>Spectral ζ</td><td>5 %</td><td>Damping ratio of all response spectra.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Equivalent-linear settings</h3>
+  <p><span class="ui">Strain ratio</span> (default 0.65) sets the effective strain as a fraction of the peak strain, <span class="ui">Iterations</span> (default 15) caps the number of passes, and <span class="ui">Tolerance</span> (default 1 %) is the change in G and D at which the iteration stops. The Log tab lists the change at each pass, so check there that the run converged rather than stopped at the iteration limit.</p>
+  <h3>Nonlinear settings</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Viscous damping</td><td>Full, f1 and mode 3</td><td>Rayleigh damping exact at the first mode and a chosen higher mode, simplified Rayleigh at the first mode only, or <b>Frequency independent</b>, which gives every mode the same damping ratio as the frequency-domain solution.</td></tr>
+      <tr><td>Viscous ζ</td><td>Dmin</td><td>Each layer's small-strain damping D<sub>min</sub>, or one constant value for the whole column.</td></tr>
+      <tr><td>Max Δt</td><td>0.0025 s</td><td>Largest integration step; the solver sub-steps the record when needed.</td></tr>
+      <tr><td>Damping correction</td><td>on</td><td>Phillips &amp; Hashash (2009) reduction factor, which scales each loop so hysteretic damping follows the target curve instead of the higher Masing value.</td></tr>
+      <tr><td>Effective stress and clay degradation</td><td>on</td><td>Activates the Sand and Clay models set on the layers. With it off, the run is a total-stress analysis.</td></tr>
+      <tr><td>Pore-pressure dissipation</td><td>on</td><td>Redistributes and dissipates excess pore pressure through the column during shaking with each layer's <i>k</i>.</td></tr>
+      <tr><td>Drained base</td><td>off</td><td>Treats the base of the column as drained instead of impervious.</td></tr>
+      <tr><td>After shaking</td><td>0 s</td><td>Continues dissipation for this time after the record ends, so you can see how long the pore pressure persists.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The time-domain solver checks itself as it runs, and the Log tab and the status bar report any warning, for example the number of steps that reached the Newton iteration limit. A handful of such steps in thousands is normal in strongly degrading clay, whereas a large count means the step is too long or the column is close to failure.</p>
+</section>
+
+<!-- 8 -->
+<section id="results">
+  <h2><span class="n">8</span>Reading the results</h2>
+  <p>Motus keeps the latest result of each method, so you can run all three and switch between them with <span class="ui">Show</span> in the options bar. With <span class="ui">Compare methods</span> ticked, the other methods appear as thinner or dashed lines on the same axes. The view buttons in the options bar choose what is plotted, and some views add a selector for the output point or layer.</p>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/res_profiles.jpg" alt="Results Profiles view comparing equivalent-linear and nonlinear peak acceleration, strain, stress ratio and pore pressure with depth" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 4.</b> The Profiles view of a nonlinear run (solid) compared with equivalent linear (dashed) on the example site.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>View</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td>Profiles</td><td>Peak acceleration, peak shear strain γ<sub>max</sub> and stress ratio τ<sub>max</sub>/σ′<sub>v0</sub> with depth. Linear and EQL add the strain-compatible G/G<sub>max</sub>, whereas a nonlinear run adds the peak excess pore pressure ratio r<sub>u</sub> (with its end value when dissipation changed it) and, when a clay degraded, the degradation index δ.</td></tr>
+      <tr><td>Histories</td><td>The input acceleration, the acceleration at the chosen output point, and either the Arias intensity build-up or, in an effective-stress run, r<sub>u</sub>(t) at the mid-depth of the layers that generated pore pressure.</td></tr>
+      <tr><td>Spectra</td><td>Response spectra of the input and of the output point, with the target spectrum at the surface, and the spectral ratio of output to input.</td></tr>
+      <tr><td>Stress-strain</td><td>Hysteresis loops at the mid-depth of the chosen layer, with the strain and stress histories.</td></tr>
+      <tr><td>Amplification</td><td>The Konno–Ohmachi smoothed Fourier ratio of output to input, plus the linear transfer function |H(f)| at the surface for frequency-domain runs.</td></tr>
+      <tr><td>Dam &amp; slope</td><td>The seismic coefficient k(t) = τ/σ<sub>v</sub> of the soil above the chosen layer, the Newmark sliding displacement for the yield coefficient k<sub>y</sub> you enter, and the peak displacement profile relative to the base. These are the dam, embankment and landfill outputs of D-MOD2000.</td></tr>
+      <tr><td>Liquefaction</td><td>Boulanger &amp; Idriss (2014) triggering for every layer below the water table with an (N<sub>1</sub>)<sub>60cs</sub> value: the factor of safety FS = CRR·MSF·K<sub>σ</sub>/CSR, demand and resistance with depth, and the SPT profile. Enter the earthquake magnitude in the options bar.</td></tr>
+      <tr><td>Suite statistics</td><td>Lognormal statistics of a suite run (Section 9).</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/res_spectra.jpg" alt="Results Spectra view with input and surface response spectra and the spectral ratio" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 5.</b> The Spectra view: input and surface spectra of both methods (top) and their ratio to the input (bottom).</figcaption>
+  </figure>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/res_loops.jpg" alt="Results Stress-strain view with hysteresis loops of the silty clay layer" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 6.</b> The Stress-strain view of the silty clay layer in the nonlinear run, with the shear strain and shear stress histories beside the loops.</figcaption>
+  </figure>
+  <p>When you read the results, start with the Profiles view, because the peak strain tells you whether the chosen method is valid at all. The Stress-strain view then shows whether a layer softened, degraded or reached its strength, and the Log tab gives the run time, the convergence of an EQL run and any warning from the nonlinear solver.</p>
+</section>
+
+<!-- 9 -->
+<section id="suite">
+  <h2><span class="n">9</span>Suites and uncertainty</h2>
+  <p>A single motion on a single profile gives one answer, whereas design practice asks for the spread over several motions and over the uncertainty in Vs. The <span class="ui">Suite</span> tab of the dock collects motions and runs them together with the current method. The current motion is always the first member, and the buttons under the list add a copy of the current motion, import several records at once, or remove the selected one.</p>
+  <p><span class="ui">Profiles per motion</span> sets how many randomised velocity profiles each motion is run on, where 0 means only the profile as entered. The randomisation follows Toro (1995) with the generic parameters of the chosen site class, or of the class implied by Vs30 when the class is <span class="ui">auto</span>. The tab shows the size of the job (motions × profiles), and <span class="ui">Run suite</span> (or <span class="ui">Analysis ▸ Run Suite</span>) runs it in parallel on every processor core.</p>
+  <p>The <span class="ui">Suite statistics</span> view shows the surface spectrum of every analysis, their median and the median multiplied and divided by e<sup>σ</sup>, the median spectral ratio to the input, and the median peak acceleration and peak strain with depth. If you change the project after a suite, the view says so in red until you run the suite again.</p>
+</section>
+
+<!-- 10 -->
+<section id="files">
+  <h2><span class="n">10</span>Files and export</h2>
+  <p>A project is a single JSON file with the extension <code>.motus</code>, which holds the profile, the input motion, the suite, the target spectrum and every setting. Results are not stored in the file, so you re-run after opening a project. Files from the earlier name of the program (<code>.srp</code>) also open.</p>
+  <p><span class="ui">File ▸ Export Results…</span> writes the results of the method shown on the Results page into a folder you choose, as five CSV files whose names start with the method tag (<code>LIN</code>, <code>EQL</code> or <code>NL</code>).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>File</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><code>*_profile.csv</code></td><td>Per sublayer: depth, layer, peak strain (%), peak stress (kPa), stress ratio, peak r<sub>u</sub>, G/G<sub>max</sub>, damping (%), σ′<sub>v</sub> (kPa)</td></tr>
+      <tr><td><code>*_pga.csv</code></td><td>Peak acceleration (g) at every node</td></tr>
+      <tr><td><code>*_acc.csv</code></td><td>Acceleration histories (g) of the input and every output point</td></tr>
+      <tr><td><code>*_spectra.csv</code></td><td>Response spectra of the input and every output point</td></tr>
+      <tr><td><code>*_stress_strain.csv</code></td><td>Stress–strain histories at the mid-depth of each layer</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 11 -->
+<section id="agent">
+  <h2><span class="n">11</span>The agent and MCP</h2>
+  <p>Every action in the window is also a Model Context Protocol (MCP) tool, so an AI agent can build a profile, run analyses and read results through the same code paths as the menus while you watch each change appear on screen. Two kinds of agent use these tools: the assistant inside the window, and outside agents such as Claude Code.</p>
+  <figure class="fig">
+    <div class="frame"><img src="img/manual/agent.jpg" alt="The agent panel open on the right of the window, with its settings and suggested requests" width="1600" height="1000" loading="lazy"></div>
+    <figcaption><b>Figure 7.</b> The agent panel with its settings open. The suggested requests at the bottom can be clicked to start a conversation.</figcaption>
+  </figure>
+  <h3>The agent inside the window</h3>
+  <p>Open the panel with the robot button in the tool strip or <span class="ui">View ▸ Agent panel</span>. The agent is a language model that plans its own steps, and it works with any OpenAI-compatible chat-completions service, with OpenRouter as the default. In the settings (the gear button) enter the <span class="ui">API URL</span>, the <span class="ui">Model</span> name and your <span class="ui">API key</span>, then press <span class="ui">Save</span>. The key is stored in the Motus settings folder with owner-only permissions, and the environment variables <code>OPENROUTER_API_KEY</code> or <code>OPENAI_API_KEY</code> also work. Tick <span class="ui">The model accepts pictures</span> only if the model can read screenshots.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>System</th><th>Settings folder</th></tr></thead>
+    <tbody>
+      <tr><td>macOS</td><td><code>~/Library/Application Support/Motus</code></td></tr>
+      <tr><td>Windows</td><td><code>%APPDATA%\Motus</code></td></tr>
+      <tr><td>Linux</td><td><code>~/.config/motus</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>Type a request and press <kbd>Enter</kbd> (<kbd>Shift+Enter</kbd> for a new line). The conversation shows each tool call with its arguments and result, <span class="ui">Stop</span> interrupts a running request, and the new-conversation button clears the history. Requests work best when they are specific, for example "Run EQL and nonlinear on this site and compare the surface spectra", or "Replace the profile with 20 m of soft clay (Vs 120 m/s, PI 40) over rock with Vs 800 m/s".</p>
+  <h3>Outside agents</h3>
+  <p>While the window is open it serves MCP over Streamable HTTP at <code>http://127.0.0.1:7879/mcp</code> (set <code>MOTUS_MCP_PORT</code> to change the port). The listener accepts local connections only and refuses requests from web pages, and you can switch it off with <span class="ui">Allow outside agents (MCP)</span> in the agent settings while the agent inside keeps working. Agents that start their servers as processes use <code>motus --mcp</code>, a stdio bridge that forwards each call to the running window and starts the window when needed. The agent settings show the exact registration command for your installation with a copy button.</p>
+  <div class="snip">
+    <div class="snip-head"><span>Register in Claude Code</span><button class="copy">Copy</button></div>
+    <pre><code>claude mcp add motus -- /path/to/motus --mcp</code></pre>
+  </div>
+  <p>On macOS the path is the executable inside the app bundle, <code>/Applications/Motus.app/Contents/MacOS/motus</code> if you installed it in Applications, and on Windows it is the full path to <code>motus.exe</code>.</p>
+  <h3>The 26 tools</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>Tools</th></tr></thead>
+    <tbody>
+      <tr><td>Project</td><td><code>get_project</code> <code>new_project</code> <code>open_project</code> <code>save_project</code> <code>undo</code> <code>redo</code></td></tr>
+      <tr><td>Profile</td><td><code>set_layers</code> <code>update_layer</code> <code>add_layer</code> <code>delete_layer</code> <code>set_site</code> <code>list_curves</code></td></tr>
+      <tr><td>Motion</td><td><code>generate_motion</code> <code>load_motion</code> <code>scale_motion</code> <code>set_design_spectrum</code> <code>fit_motion_to_target</code></td></tr>
+      <tr><td>Analysis</td><td><code>set_analysis</code> <code>run_analysis</code> <code>set_suite</code> <code>run_suite</code></td></tr>
+      <tr><td>Results</td><td><code>get_results</code> <code>get_suite_results</code> <code>show</code> <code>screenshot</code> <code>export_results</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>The tools use the same units as the window (m, kN/m³, m/s, kPa, accelerations in g and strains in %) and number layers from 0 at the surface. <code>run_analysis</code> replies only when the background solve ends, with a per-layer summary of peak strain, r<sub>u</sub> and degradation, so an agent always reports numbers the solver actually produced.</p>
+</section>
+
+<!-- 12 -->
+<section id="cli">
+  <h2><span class="n">12</span>Command line</h2>
+  <p>Both <code>motus</code> and the window-free <code>motus-cli</code> accept command-line modes for scripted and batch work, which is useful for parametric studies and for running on a server without a display. Each mode reads a <code>.motus</code> project, so you set the project up in the window first and then run it from a script.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>--run site.motus [linear|eql|nl] [out/]</code></td><td>Solves one project, prints the surface PGA and the log, and writes the CSV files of Export Results to the folder.</td></tr>
+      <tr><td><code>--batch jobs.json</code></td><td>Runs many analyses on all cores. The file is a list of <code>{"project", "method", "out"}</code> objects, and one JSON line is printed per job.</td></tr>
+      <tr><td><code>--suite site.motus out.json</code></td><td>Runs the project's suite and writes every run as JSON.</td></tr>
+      <tr><td><code>--suite-gen site.motus M R seeds out.json</code></td><td>Adds one stochastic record per seed (comma-separated) for magnitude M at R km, scaled to the project motion's PGA, then runs the suite.</td></tr>
+      <tr><td><code>--psa-batch in.json out.json</code></td><td>Response spectra of many records, on a CUDA GPU when one is present.</td></tr>
+      <tr><td><code>--gpu</code></td><td>Reports whether a CUDA GPU is usable and how many CPU threads are available.</td></tr>
+      <tr><td><code>--write-example site.motus</code></td><td>Saves the built-in example project.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="snip">
+    <div class="snip-head"><span>Example</span><button class="copy">Copy</button></div>
+    <pre><code>motus-cli --write-example site.motus
+motus-cli --run site.motus nl results/</code></pre>
+  </div>
+</section>
+
+<!-- 13 -->
+<section id="keys">
+  <h2><span class="n">13</span>Keyboard shortcuts</h2>
+  <p>On macOS the shortcuts use <kbd>⌘</kbd>, and on Windows and Linux they use <kbd>Ctrl</kbd>.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><kbd>⌘O</kbd></td><td>Open a project</td></tr>
+      <tr><td><kbd>⌘S</kbd></td><td>Save the project</td></tr>
+      <tr><td><kbd>⌘I</kbd></td><td>Import a motion record</td></tr>
+      <tr><td><kbd>⌘R</kbd></td><td>Run the analysis with the current method</td></tr>
+      <tr><td><kbd>⌘Z</kbd></td><td>Undo</td></tr>
+      <tr><td><kbd>⇧⌘Z</kbd></td><td>Redo</td></tr>
+      <tr><td><kbd>⌘Q</kbd></td><td>Quit</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 14 -->
+<section id="practice">
+  <h2><span class="n">14</span>Good practice and limits</h2>
+  <p>Motus has been checked against closed-form solutions, against the published example problems of SHAKE91, DEEPSOIL and Strata, and against six weak-motion earthquakes recorded at the Garner Valley Downhole Array, as set out in the <a href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">accompanying paper</a>. Those checks cover small-strain behaviour well, whereas strong-motion pore-pressure and clay-degradation behaviour has not been validated against field records, so a few habits keep the results honest.</p>
+  <ul>
+    <li><b>Check the strain level first.</b> If the peak strain in the Profiles view exceeds roughly 0.1–0.3 %, an EQL result is outside its range, so run the nonlinear solver and compare.</li>
+    <li><b>Calibrate pore-pressure and clay parameters.</b> The defaults are placeholders, so fit F, s, p and the clay parameters to cyclic tests on your soil, or treat the effective-stress result as indicative only.</li>
+    <li><b>Cap the strength of soft layers.</b> Without a strength cap, laboratory curves extrapolated to large strain can imply a shear strength the soil does not have.</li>
+    <li><b>Look at the backbone fit.</b> The Curves page shows how well the nonlinear backbone and the corrected damping follow your targets, and a poor fit carries straight into the result.</li>
+    <li><b>Use several motions.</b> One record is one sample, so run a suite of at least several motions before you draw design conclusions.</li>
+    <li><b>Read the Log tab.</b> It reports EQL convergence and every nonlinear warning, and a warning there usually explains an odd result.</li>
+  </ul>
+  <p>The current version does not include random-vibration theory (RVT), frequency-dependent EQL, randomisation of layer thickness or curves, slip interfaces, a PDF report, imperial units, or import of SHAKE and DEEPSOIL input files.</p>
+</section>
+
+<!-- 15 -->
+<section id="trouble">
+  <h2><span class="n">15</span>Troubleshooting</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Symptom</th><th>Cause and remedy</th></tr></thead>
+    <tbody>
+      <tr><td>macOS says the app cannot be opened</td><td>The app is not notarised. Right-click it, choose Open and confirm once.</td></tr>
+      <tr><td>Windows SmartScreen blocks the program</td><td>The executable is not code-signed. Choose More info, then Run anyway.</td></tr>
+      <tr><td>A red banner says the project changed</td><td>The results are older than the project. Run the analysis again.</td></tr>
+      <tr><td>Import record dialog appears</td><td>The file layout was not recognised. Give the columns, header lines, time step and units.</td></tr>
+      <tr><td>No pore pressure develops</td><td>Check that the method is Nonlinear, that Effective stress is ticked, that the layer has a Sand or Clay model, and that it lies below the water table.</td></tr>
+      <tr><td>Liquefaction view is empty</td><td>No layer below the water table has an (N<sub>1</sub>)<sub>60cs</sub> value. Tick the SPT box in the layer Properties.</td></tr>
+      <tr><td>Warning about the iteration limit</td><td>A few steps are normal in degrading clay. If there are many, lower Max Δt or check whether a layer is close to its strength.</td></tr>
+      <tr><td>Outside agents: port in use</td><td>Another Motus window already serves port 7879, so outside agents reach that window. Close it or set <code>MOTUS_MCP_PORT</code>.</td></tr>
+      <tr><td>The agent replies with an error</td><td>Check the API URL, model name and key in the agent settings, and that the service is reachable from your network.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Questions and reports go to the AI Research Group, Department of Civil Engineering, King Mongkut's University of Technology Thonburi. When you report a problem, attach the <code>.motus</code> project and the text of the Log tab, because together they reproduce the run exactly.</p>
+</section>
+
+</article>
+</div>
+
+<footer class="foot">
+  <div><img src="img/icon.png" alt="" width="22" height="22"> <b>Motus</b> · Seismic site response</div>
+  <div>AI Research Group, Department of Civil Engineering, King Mongkut's University of Technology Thonburi, Bangkok</div>
+  <div><a href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">Paper on Zenodo</a> · doi:10.5281/zenodo.23794368</div>
+  <div class="fine">Code MIT OR Apache-2.0 · UI theme ported from PhotoCraft · icons Lucide (ISC) · Inter (OFL)</div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Screenshot"><img alt=""></div>
+<div class="toast" id="toast" role="status"></div>
+<script src="manual.js"></script>
+</body>
+</html>
