@@ -1,0 +1,4 @@
+# Release builds are uploaded as GitHub Release assets, not committed.
+downloads/*.zip
+downloads/*.tar.gz
+.DS_Store

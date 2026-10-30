@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motus · Seismic site response</title>
+<meta name="description" content="Motus is a free, open program for one-dimensional seismic site response: equivalent-linear and nonlinear effective-stress solvers, pore pressure, suites, and an MCP agent interface.">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav" id="top">
+  <a class="brand" href="#top"><img src="img/icon.png" alt="" width="30" height="30"><span>Motus</span></a>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#inside">Inside</a>
+    <a href="#validation">Validation</a>
+    <a href="#agents">Agents</a>
+    <a class="btn btn-small" href="#download">Download</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="hero-text intro">
+    <p class="eyebrow">Freeware · open source · v<span class="ver">0.1.0</span></p>
+    <h1>Seismic site response,<br><span class="grad">free and agent-ready.</span></h1>
+    <p class="lead">Motus propagates earthquake shaking up through a layered soil column. It combines a SHAKE-type equivalent-linear solver with a D-MOD-type nonlinear effective-stress solver, and every action in its window is also a Model Context Protocol tool that an AI agent can call.</p>
+    <div class="cta">
+      <a class="btn" href="#download">Download free</a>
+      <a class="btn btn-ghost" href="#validation">See the validation</a>
+    </div>
+    <p class="fine">MIT / Apache-2.0 · no account, no licence key, no telemetry</p>
+  </div>
+  <div class="hero-sim intro intro2">
+    <canvas id="sim" aria-label="Animated one-dimensional site response: a layered soil column shaking as a shear wave travels up from bedrock"></canvas>
+    <div class="sim-legend">
+      <span><i class="dot base"></i>Bedrock input</span>
+      <span><i class="dot surf"></i>Surface motion</span>
+      <span class="sim-note">Live 1-D shear-wave model in your browser · linear, about 6 % damping · displacements exaggerated</span>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><b data-count="2">0</b><span>solvers: equivalent linear and nonlinear</span></div>
+  <div class="stat"><b data-count="26">0</b><span>MCP tools for agents</span></div>
+  <div class="stat"><b data-count="30">0</b><span>published modulus-reduction curves</span></div>
+  <div class="stat"><b data-count="37">0</b><span>automated verification tests</span></div>
+</section>
+
+<section id="features" class="section">
+  <div class="section-head reveal">
+    <p class="eyebrow">Features</p>
+    <h2>The whole site-response workflow in one program</h2>
+    <p>Build the column, pick the curves, fit the input motion to a design spectrum, run linear, equivalent-linear and nonlinear analyses side by side, and read the results without leaving the window.</p>
+  </div>
+  <div class="grid">
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></div>
+      <h3>Two solvers</h3>
+      <p>Frequency-domain linear and equivalent-linear analysis as in SHAKE91, and a time-domain lumped-mass solver with Newmark integration and full Newton iterations as in D-MOD2000.</p>
+    </article>
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 18c4 0 5-12 8-12s4 12 8 12"/><path d="M4 6c4 0 5 12 8 12"/></svg></div>
+      <h3>Hysteresis that matches the curves</h3>
+      <p>MKZ and strength-bounded GQ/H backbones with extended Masing rules, and the Phillips–Hashash reduction factor so loops reproduce the target damping.</p>
+    </article>
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg></div>
+      <h3>Pore pressure and clay</h3>
+      <p>Dobry–Matasović pore-pressure generation in sands, Matasović–Vucetic cyclic degradation in clays, and dissipation through the column during and after shaking.</p>
+    </article>
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 20V9l4-4 4 6 4-3 2 2v10"/></svg></div>
+      <h3>Design motions</h3>
+      <p>ASCE 7 and Eurocode 8 target spectra, amplitude scaling, frequency-domain spectral matching with baseline correction, PEER records or Boore stochastic motions.</p>
+    </article>
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M8 19v-6"/><path d="M12 19V8"/><path d="M16 19v-9"/><path d="M20 19v-4"/></svg></div>
+      <h3>Suites and uncertainty</h3>
+      <p>Many motions on velocity profiles randomised with Toro (1995), summarised as lognormal medians and σln, run in parallel on every core.</p>
+    </article>
+    <article class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+      <h3>Post-processing</h3>
+      <p>Seismic coefficient and Newmark sliding displacement for dams, embankments and landfills, Boulanger–Idriss liquefaction triggering, displacement profiles and CSV export.</p>
+    </article>
+  </div>
+</section>
+
+<section id="inside" class="section alt">
+  <div class="section-head reveal">
+    <p class="eyebrow">Inside the solver</p>
+    <h2>Watch the soil soften as it strains</h2>
+    <p>Each sublayer follows a backbone curve and Masing unload–reload rules. Larger cycles mobilise lower stiffness and more damping, which is what the nonlinear solver tracks cycle by cycle.</p>
+  </div>
+  <div class="inside">
+    <figure class="panel reveal">
+      <canvas id="loop" aria-label="Animated hysteresis loops growing with strain amplitude"></canvas>
+      <figcaption>Stress–strain loops of an MKZ backbone with Masing rules, growing with strain amplitude.</figcaption>
+    </figure>
+    <figure class="panel reveal">
+      <canvas id="spec" aria-label="Animated amplification function of the soil column"></canvas>
+      <figcaption>Amplification function of the column shown at the top of the page, computed with the SHAKE wave recursion (6 % damping, rigid base). Shaking is amplified most at the natural frequencies.</figcaption>
+    </figure>
+  </div>
+  <div class="shots reveal">
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-shot="spectra">Spectra</button>
+      <button class="tab" data-shot="profiles">Profiles</button>
+      <button class="tab" data-shot="loops">Stress–strain</button>
+      <button class="tab" data-shot="curves">Curves</button>
+      <button class="tab" data-shot="motion">Input motion</button>
+    </div>
+    <div class="shot-frame"><img id="shot" src="img/spectra.jpg" alt="Motus window showing response spectra of nonlinear and equivalent-linear analyses" width="1600" height="1000" loading="lazy"></div>
+  </div>
+</section>
+
+<section id="validation" class="section">
+  <div class="section-head reveal">
+    <p class="eyebrow">Validation</p>
+    <h2>Checked against established programs and recorded data</h2>
+    <p>Motus solves the published example problems of other programs with only the inputs stated in their manuals, and predicts earthquakes recorded at a downhole array. Numbers are from the accompanying paper.</p>
+  </div>
+  <div class="val">
+    <div class="val-list reveal">
+      <div class="vrow"><div class="vname">SHAKE91 sample problem<small>peak strain in 16 sublayers</small></div><div class="vbar"><i data-w="0.13"></i></div><div class="vnum">≤ 0.13 %</div></div>
+      <div class="vrow"><div class="vname">DEEPSOIL Example 2A<small>mean spectral difference</small></div><div class="vbar"><i data-w="0.09"></i></div><div class="vnum">0.09 %</div></div>
+      <div class="vrow"><div class="vname">pystrata, identical inputs<small>mean spectral difference, EQL</small></div><div class="vbar"><i data-w="0.69"></i></div><div class="vnum">0.1–0.7 %</div></div>
+      <div class="vrow"><div class="vname">Strata SCH, 10 motions<small>mean spectral difference, T ≤ 6 s</small></div><div class="vbar"><i data-w="4.8"></i></div><div class="vnum">0.1–4.8 %</div></div>
+      <p class="vscale">Bar length on a 0–5 % scale.</p>
+    </div>
+    <div class="gvda reveal">
+      <h3>Garner Valley Downhole Array</h3>
+      <p>Viscous damping calibrated on one earthquake, then five other earthquakes (M 3.6–7.1) predicted without change. RMS log residual of surface spectra, 0.02–2 s:</p>
+      <div class="gbars">
+        <div class="gb"><i style="--h:0.44"></i><b>0.44</b><span>Equivalent linear</span></div>
+        <div class="gb"><i style="--h:0.41"></i><b>0.41</b><span>Nonlinear, D<sub>min</sub></span></div>
+        <div class="gb"><i style="--h:0.35"></i><b>0.35</b><span>Nonlinear, 3 % Rayleigh</span></div>
+        <div class="gb best"><i style="--h:0.28"></i><b>0.28</b><span>Nonlinear, 3 % freq.-indep.</span></div>
+      </div>
+      <p class="fine">All six records are weak motions, so this tests small-strain behaviour. Validate pore-pressure and clay parameters against cyclic tests on your own soil before design.</p>
+    </div>
+  </div>
+</section>
+
+<section id="agents" class="section alt">
+  <div class="agents">
+    <div class="reveal">
+      <p class="eyebrow">Agents</p>
+      <h2>Every action is an MCP tool</h2>
+      <p>The assistant inside the window and outside agents such as Claude Code use the same 26 tools, which run through the same code paths as the menus, so you watch every change appear on screen. The listener accepts local connections only and can be switched off.</p>
+      <ul class="chips">
+        <li>set_layers</li><li>update_layer</li><li>generate_motion</li><li>set_design_spectrum</li><li>fit_motion_to_target</li><li>run_analysis</li><li>run_suite</li><li>get_results</li><li>show</li><li>screenshot</li><li>export_results</li><li>undo</li>
+      </ul>
+      <div class="snip">
+        <div class="snip-head"><span>Register in Claude Code</span><button class="copy" data-copy="claude mcp add motus -- /path/to/motus --mcp">Copy</button></div>
+        <pre><code>claude mcp add motus -- /path/to/motus --mcp</code></pre>
+      </div>
+    </div>
+    <div class="term reveal" aria-label="Illustrative agent session">
+      <div class="term-bar"><i></i><i></i><i></i><span>agent session (illustrative)</span></div>
+      <pre id="term"></pre>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="section">
+  <div class="section-head reveal">
+    <p class="eyebrow">Download</p>
+    <h2>Free for any use</h2>
+    <p>Motus is freeware under MIT or Apache-2.0: use it for teaching, research and commercial design work. No account, no licence key, no telemetry.</p>
+  </div>
+  <div class="dl">
+    <article class="dcard reveal" data-os="mac">
+      <div class="os"><svg viewBox="0 0 24 24"><path d="M16 3c0 2-1.5 3.5-3.3 3.5C12.5 4.6 14 3 16 3zM19.5 16.6c-.6 1.4-1.4 2.8-2.6 2.8-1.1 0-1.5-.7-2.8-.7s-1.8.7-2.8.7c-1.2 0-2.1-1.5-2.8-2.9C6.9 13.8 7 10.4 9.3 9.4c1-.5 2-.3 2.8.1.6.3 1 .3 1.6 0 1-.5 2.3-.6 3.3.2.4.3.8.7 1 1.1-2 1.2-1.7 4.3.5 5.2z"/></svg></div>
+      <h3>macOS</h3>
+      <p class="meta" data-meta>Universal (Apple silicon + Intel) · macOS 11+</p>
+      <a class="btn" data-dl href="#">Download</a>
+      <p class="hash" data-hash></p>
+    </article>
+    <article class="dcard reveal" data-os="win">
+      <div class="os"><svg viewBox="0 0 24 24"><path d="M3 5.5l7.5-1v7H3zM11.5 4.3L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.3z"/></svg></div>
+      <h3>Windows</h3>
+      <p class="meta" data-meta>x86_64 · Windows 10+</p>
+      <a class="btn" data-dl href="#">Download</a>
+      <p class="hash" data-hash></p>
+    </article>
+    <article class="dcard reveal" data-os="linux">
+      <div class="os"><svg viewBox="0 0 24 24"><path d="M12 3c-2 0-3 1.7-3 4 0 1.4-.6 2.4-1.5 3.6C6.3 12.2 5 14 5 16c0 1 .4 1.8 1 2.4L5 21h3l1-1.6c.9.4 1.9.6 3 .6s2.1-.2 3-.6l1 1.6h3l-1-2.6c.6-.6 1-1.4 1-2.4 0-2-1.3-3.8-2.5-5.4C16.6 9.4 16 8.4 16 7c0-2.3-1-4-4-4z"/></svg></div>
+      <h3>Linux</h3>
+      <p class="meta" data-meta>x86_64 · glibc 2.31+</p>
+      <a class="btn" data-dl href="#">Download</a>
+      <p class="hash" data-hash></p>
+    </article>
+  </div>
+  <div class="src reveal">
+    <h3>Build from source</h3>
+    <p>Any platform with Rust 1.80 or newer:</p>
+    <pre><code>cargo build --release
+./target/release/motus                          # the window, with the example site
+./target/release/motus-cli --run site.motus nl out/   # solve without the window</code></pre>
+    <p class="fine">The macOS build is universal (Apple silicon and Intel) but not notarised, so on first launch right-click the app and choose Open. The Windows build is not code-signed, so SmartScreen may warn on first launch: choose More info, then Run anyway. Pore-pressure and clay-degradation defaults are placeholders that must be calibrated for your soil.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div><img src="img/icon.png" alt="" width="22" height="22"> <b>Motus</b> · Seismic site response</div>
+  <div>AI Research Group, Department of Civil Engineering, King Mongkut's University of Technology Thonburi, Bangkok</div>
+  <div class="fine">Code MIT OR Apache-2.0 · UI theme ported from PhotoCraft · icons Lucide (ISC) · Inter (OFL)</div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="downloads/config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
