@@ -1,8 +1,7 @@
 #!/bin/bash
 # Packages the freeware downloads into web/downloads and rewrites downloads/config.js.
 #   bash web/package.sh
-#   BASE_URL=https://github.com/motus-app/motus-app.github.io/releases/download/vX.Y.Z bash web/package.sh
-#   (then upload downloads/*.zip and SHA256SUMS.txt to that GitHub release)
+#   (zips are committed in web/downloads and served by GitHub Pages; BASE_URL can point elsewhere)
 # macOS: universal Motus.app from target/release (x86_64) and target/aarch64-apple-darwin/release
 # (lipo; falls back to whichever exists). Windows: target/x86_64-pc-windows-gnu/release
 # (MinGW cross build) or WIN_DIR. Linux: LINUX_DIR (e.g. built on the Vast box).
