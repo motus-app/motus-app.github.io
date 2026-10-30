@@ -145,6 +145,14 @@ pre { margin: 0; padding: 14px 16px; font: .84rem/1.6 var(--mono); color: #cfe3f
 #term .cursor { display: inline-block; width: 8px; height: 1em; background: var(--blue2); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* paper */
+.paper { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items: center; }
+@media (max-width: 900px) { .paper { grid-template-columns: 1fr; } }
+.paper > * { min-width: 0; }
+.paper h2 { font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
+.authors { color: var(--ink); font-weight: 500; }
+.cite pre { white-space: pre; font-size: .78rem; color: #c9d3de; }
+
 /* download */
 .dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 @media (max-width: 820px) { .dl { grid-template-columns: 1fr; } }

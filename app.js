@@ -366,7 +366,8 @@ $$(".tab").forEach((b) => b.addEventListener("click", () => {
 // ---------------------------------------------------------------- copy buttons, toast
 const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); };
 $$(".copy").forEach((b) => b.addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); }
+  const text = b.dataset.copyFrom ? document.getElementById(b.dataset.copyFrom).textContent : b.dataset.copy;
+  try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); }
   catch { toast("Copy failed. Select the text instead."); }
 }));
 

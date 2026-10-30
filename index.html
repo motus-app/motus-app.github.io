@@ -20,6 +20,7 @@
     <a href="#inside">Inside</a>
     <a href="#validation">Validation</a>
     <a href="#agents">Agents</a>
+    <a href="#paper">Paper</a>
     <a class="btn btn-small" href="#download">Download</a>
   </nav>
 </header>
@@ -33,7 +34,7 @@
     <p class="lead">Motus propagates earthquake shaking up through a layered soil column. It combines a SHAKE-type equivalent-linear solver with a D-MOD-type nonlinear effective-stress solver, and every action in its window is also a Model Context Protocol tool that an AI agent can call.</p>
     <div class="cta">
       <a class="btn" href="#download">Download free</a>
-      <a class="btn btn-ghost" href="#validation">See the validation</a>
+      <a class="btn btn-ghost" href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">Read the paper</a>
     </div>
     <p class="fine">MIT / Apache-2.0 · no account, no licence key, no telemetry</p>
   </div>
@@ -126,7 +127,7 @@
   <div class="section-head reveal">
     <p class="eyebrow">Validation</p>
     <h2>Checked against established programs and recorded data</h2>
-    <p>Motus solves the published example problems of other programs with only the inputs stated in their manuals, and predicts earthquakes recorded at a downhole array. Numbers are from the accompanying paper.</p>
+    <p>Motus solves the published example problems of other programs with only the inputs stated in their manuals, and predicts earthquakes recorded at a downhole array. Numbers are from the <a href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">accompanying paper</a>.</p>
   </div>
   <div class="val">
     <div class="val-list reveal">
@@ -167,6 +168,34 @@
     <div class="term reveal" aria-label="Illustrative agent session">
       <div class="term-bar"><i></i><i></i><i></i><span>agent session (illustrative)</span></div>
       <pre id="term"></pre>
+    </div>
+  </div>
+</section>
+
+<section id="paper" class="section alt">
+  <div class="paper reveal">
+    <div class="paper-text">
+      <p class="eyebrow">Paper</p>
+      <h2>Motus: an agent-ready program for one-dimensional seismic site response with equivalent-linear and nonlinear effective-stress solvers</h2>
+      <p class="authors">Sompote Youwai · King Mongkut's University of Technology Thonburi · 2026</p>
+      <p>The paper sets out the formulation, verifies the solvers against closed-form solutions, solves the published example problems of SHAKE91, DEEPSOIL and Strata, predicts six earthquakes recorded at the Garner Valley Downhole Array, and applies Motus to the deep soft-clay basin of Bangkok.</p>
+      <div class="cta">
+        <a class="btn" href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">Read on Zenodo</a>
+        <a class="btn btn-ghost" href="https://doi.org/10.5281/zenodo.23794368" target="_blank" rel="noopener">doi:10.5281/zenodo.23794368</a>
+      </div>
+    </div>
+    <div class="snip cite">
+      <div class="snip-head"><span>Cite as (BibTeX)</span><button class="copy" data-copy-from="bibtex">Copy</button></div>
+      <pre><code id="bibtex">@misc{youwai2026motus,
+  author    = {Youwai, Sompote},
+  title     = {Motus: an agent-ready program for one-dimensional
+               seismic site response with equivalent-linear and
+               nonlinear effective-stress solvers},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23794368},
+  url       = {https://zenodo.org/records/23794368}
+}</code></pre>
     </div>
   </div>
 </section>
@@ -215,6 +244,7 @@
 <footer class="foot">
   <div><img src="img/icon.png" alt="" width="22" height="22"> <b>Motus</b> · Seismic site response</div>
   <div>AI Research Group, Department of Civil Engineering, King Mongkut's University of Technology Thonburi, Bangkok</div>
+  <div><a href="https://zenodo.org/records/23794368" target="_blank" rel="noopener">Paper on Zenodo</a> · doi:10.5281/zenodo.23794368</div>
   <div class="fine">Code MIT OR Apache-2.0 · UI theme ported from PhotoCraft · icons Lucide (ISC) · Inter (OFL)</div>
 </footer>
 
